@@ -75,3 +75,23 @@ for name, model in reg_models.items():
     reg_results.append({'Algorithm': name, 'Accuracy': percent_within})
 
 reg_df = pd.DataFrame(reg_results)
+
+
+clf_models = {
+    'LogisticRegression': LogisticRegression(max_iter=1000),
+    'KNN': KNeighborsClassifier(),
+    'DecisionTree': DecisionTreeClassifier(),
+    'RandomForest': RandomForestClassifier(),
+    'SVC': SVC(),
+    'NaiveBayes': GaussianNB()
+}
+
+clf_results = []
+
+for name, model in clf_models.items():
+    model.fit(X_train_c_scaled, y_train_c)
+    preds = model.predict(X_test_c_scaled)
+    acc = accuracy_score(y_test_c, preds) * 100
+    clf_results.append({'Algorithm': name, 'Accuracy': acc})
+
+clf_df = pd.DataFrame(clf_results)
