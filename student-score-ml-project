@@ -28,3 +28,29 @@ df.drop(drop_cols, axis=1, inplace=True)
 
 num_cols = df.select_dtypes(include=['int64', 'float64']).columns
 cat_cols = df.select_dtypes(include=['object']).columns
+
+
+df[num_cols] = SimpleImputer(strategy='median').fit_transform(df[num_cols])
+df[cat_cols] = SimpleImputer(strategy='most_frequent').fit_transform(df[cat_cols])
+
+
+df = pd.get_dummies(df, drop_first=True)
+
+df['average_score'] = df[['math score', 'reading score', 'writing score']].mean(axis=1)
+X = df.drop(['average_score'], axis=1)
+y_reg = df['average_score']
+y_clf = (y_reg > y_reg.median()).astype(int)
+
+
+
+X_train_r, X_test_r, y_train_r, y_test_r = train_test_split(X, y_reg, test_size=0.2, random_state=42)
+X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(X, y_clf, test_size=0.2, random_state=42)
+
+
+scaler_r = StandardScaler()
+X_train_r_scaled = scaler_r.fit_transform(X_train_r)
+X_test_r_scaled = scaler_r.transform(X_test_r)
+
+scaler_c = StandardScaler()
+X_train_c_scaled = scaler_c.fit_transform(X_train_c)
+X_test_c_scaled = scaler_c.transform(X_test_c)
