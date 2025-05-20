@@ -95,3 +95,12 @@ for name, model in clf_models.items():
     clf_results.append({'Algorithm': name, 'Accuracy': acc})
 
 clf_df = pd.DataFrame(clf_results)
+
+km = KMeans(n_clusters=3, random_state=42)
+clusters = km.fit_predict(X_train_r_scaled)
+sil_score = silhouette_score(X_train_r_scaled, clusters)
+clus_df = pd.DataFrame([{'Algorithm': 'KMeans', 'Silhouette Score': sil_score}])
+
+display(reg_df)
+display(clf_df)
+display(clus_df)
